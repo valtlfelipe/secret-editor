@@ -21,6 +21,7 @@ import { NewSecret } from '@/components/app/new-secret';
 import { SecretSelector } from '@/components/app/secret-selector';
 import { WithoutSavingConfirm } from '@/components/app/without-saving-confirm';
 import { Loading } from '@/components/ui/loading';
+import { Button } from '@/components/ui/button';
 
 const isInitializing = ref(true);
 const isValid = ref(true);
@@ -31,11 +32,9 @@ const openSecretSelector = ref(false);
 const openConfirm = ref(false);
 let confirmIntendedAction: string = '';
 
-const loadedSecret: Ref<appType.Secret> = ref({
-  arn: '',
-  name: '',
-  secret: '',
-});
+const preferences: Ref<appType.Preferences> = ref({} as appType.Preferences);
+
+const loadedSecret: Ref<appType.Secret> = ref({} as appType.Secret);
 
 // Codemirror data
 const code = ref(``);
@@ -160,14 +159,25 @@ async function init() {
     await loadSecret(data.general.lastOpenedSecret);
   }
 
+  preferences.value = data;
   isInitializing.value = false;
+}
+
+let clickFooterTimes = 0;
+
+function clickFooter() {
+  clickFooterTimes++;
+  if (clickFooterTimes === 5) {
+    toast('You are a nice person! 😊');
+    clickFooterTimes = 0;
+  }
 }
 
 init();
 </script>
 
 <template>
-  <div>
+  <div class="bg-gray-50">
     <Toaster />
     <NewSecret v-model:open="openNewSecret" @submit="submitNewSecret" />
     <SecretSelector
@@ -183,7 +193,10 @@ init();
       <Loading />
     </div>
 
-    <div v-else class="flex flex-col h-screen">
+    <div
+      v-if="!isInitializing && loadedSecret.arn"
+      class="flex flex-col h-screen"
+    >
       <header class="flex items-center justify-between space-y-2 p-4">
         <div>
           <h2 class="text-2xl font-bold tracking-tight">
@@ -222,9 +235,59 @@ init();
           <p class="text-white text-xs">
             {{ isValid ? '✅ Valid' : `⚠️ ${errorMessage}` }}
           </p>
+          <!-- <button class="text-white text-xs transition-all hover:font-bold">
+            {{ preferences.provider.current }} [{{
+              preferences.provider.awsProfile
+            }}]
+          </button> -->
           <p class="text-white text-xs">
             {{ isDirty ? `Not saved.` : 'Saved!' }}
           </p>
+        </div>
+      </footer>
+    </div>
+
+    <div
+      v-if="!isInitializing && !loadedSecret.arn"
+      class="flex flex-col h-screen"
+    >
+      <div
+        class="mx-auto flex w-full h-screen flex-col justify-center space-y-6 sm:w-[350px]"
+      >
+        <div class="flex flex-col space-y-2 text-center">
+          <h1 class="text-2xl font-semibold tracking-tight">Welcome!</h1>
+          <Button
+            @click="openNewSecret = true"
+            variant="outline"
+            class="text-muted-foreground"
+          >
+            Create a new Secret
+            <kbd
+              class="ml-4 pointer-events-none h-5 select-none gap-1 rounded border border-border bg-muted font-sans font-medium min-h-5 text-[14px] h-5 px-1 pointer-events-none h-5 select-none gap-1 rounded border bg-muted px-1.5 font-mono font-medium opacity-100"
+              ><span class="text-xs">⌘</span>N
+            </kbd>
+          </Button>
+          <Button
+            @click="openSecretSelector = true"
+            variant="outline"
+            class="text-muted-foreground"
+          >
+            Open existing secret
+            <kbd
+              class="ml-4 pointer-events-none h-5 select-none gap-1 rounded border border-border bg-muted font-sans font-medium min-h-5 text-[14px] h-5 px-1 pointer-events-none h-5 select-none gap-1 rounded border bg-muted px-1.5 font-mono font-medium opacity-100"
+              ><span class="text-xs">⌘</span>O
+            </kbd>
+          </Button>
+        </div>
+      </div>
+      <footer class="mt-auto">
+        <div class="py-3 text-center">
+          <a
+            href="#/"
+            @click.prevent="clickFooter"
+            class="text-muted-foreground text-xs"
+            >Secret Editor v.beta</a
+          >
         </div>
       </footer>
     </div>

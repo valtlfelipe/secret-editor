@@ -9,8 +9,8 @@ import (
 type SecretsProvider interface {
 	GetSecrets() types.ResultList
 	CreateSecret(name *string, secret *string) types.Result
-	SaveSecret(arn *string, secret *string) types.Result
-	LoadSecret(arn *string) types.Result
+	SaveSecret(id *string, secret *string) types.Result
+	LoadSecret(id *string) types.Result
 }
 
 type SecretsHandler struct {

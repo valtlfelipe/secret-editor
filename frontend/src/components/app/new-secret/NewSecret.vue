@@ -49,7 +49,12 @@ watch(open, (isOpen) => {
         <div class="grid gap-4 py-4">
           <div class="grid grid-cols-4 items-center gap-4">
             <Label for="name" class="text-right"> Name </Label>
-            <Input id="name" v-model="newSecretName" class="col-span-3" />
+            <Input
+              id="name"
+              v-model="newSecretName"
+              class="col-span-3"
+              required
+            />
           </div>
         </div>
         <DialogFooter>
