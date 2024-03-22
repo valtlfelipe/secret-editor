@@ -49,8 +49,7 @@ const handleReady = (payload: any) => {
 EventsOn('command:new', async () => {
   if (openNewSecret.value) return;
   if (isDirty.value) {
-    confirmIntendedAction = 'new';
-    openConfirm.value = true;
+    confirmAction('new');
     return;
   }
   openNewSecret.value = true;
@@ -63,12 +62,16 @@ EventsOn('command:save', async () => {
 EventsOn('command:open', async () => {
   if (openSecretSelector.value) return;
   if (isDirty.value) {
-    confirmIntendedAction = 'open';
-    openConfirm.value = true;
+    confirmAction('open');
     return;
   }
   openSecretSelector.value = true;
 });
+
+function confirmAction(action: string) {
+  confirmIntendedAction = action;
+  openConfirm.value = true;
+}
 
 function openSelectedSecret(item: appType.Secret) {
   loadSecret(item.arn);
@@ -80,7 +83,7 @@ async function submitNewSecret(item: appType.Secret) {
   openNewSecret.value = false;
 }
 
-function confirmAction() {
+function confirmActionResult() {
   if (confirmIntendedAction === '') return;
 
   switch (confirmIntendedAction) {
@@ -133,7 +136,12 @@ function onCodeChange(event: string) {
   } catch (e: any) {
     view.value.dispatch(
       setDiagnostics(view.value.state, [
-        { from: 0, to: event.length, severity: 'error', message: e.message },
+        {
+          from: 0,
+          to: event.length,
+          severity: 'error',
+          message: e.message,
+        },
       ])
     );
     errorMessage.value = e.message;
@@ -166,7 +174,10 @@ init();
       v-model:open="openSecretSelector"
       @select="openSelectedSecret"
     />
-    <WithoutSavingConfirm v-model:open="openConfirm" @confirm="confirmAction" />
+    <WithoutSavingConfirm
+      v-model:open="openConfirm"
+      @confirm="confirmActionResult"
+    />
 
     <div v-if="isInitializing">
       <Loading />

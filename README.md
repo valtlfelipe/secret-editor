@@ -20,7 +20,7 @@ To build a redistributable, production mode package, use `wails build`.
 
 # TODO
 
-- [ ] Before open or create warning
+- [x] Before open or create warning
 - [ ] Before close warning
 - [ ] AWS Credentials setup
 - [ ] Secret out of version check

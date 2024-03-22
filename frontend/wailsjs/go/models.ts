@@ -1,5 +1,19 @@
 export namespace types {
 	
+	export class PreferencesProvider {
+	    current: string;
+	    awsProfile: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new PreferencesProvider(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.current = source["current"];
+	        this.awsProfile = source["awsProfile"];
+	    }
+	}
 	export class PreferencesGeneral {
 	    lastOpenedSecret: string;
 	
@@ -14,6 +28,7 @@ export namespace types {
 	}
 	export class Preferences {
 	    general: PreferencesGeneral;
+	    provider: PreferencesProvider;
 	
 	    static createFrom(source: any = {}) {
 	        return new Preferences(source);
@@ -22,6 +37,7 @@ export namespace types {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.general = this.convertValues(source["general"], PreferencesGeneral);
+	        this.provider = this.convertValues(source["provider"], PreferencesProvider);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -42,6 +58,7 @@ export namespace types {
 		    return a;
 		}
 	}
+	
 	
 	export class Secret {
 	    arn: string;
