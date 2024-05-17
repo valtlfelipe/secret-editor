@@ -64,7 +64,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
-        working-directory: ./build
         with:
+          fail_on_unmatched_files: true
           files: |
             */bin/*
