@@ -15,7 +15,6 @@ import (
 )
 
 type PreferencesStorage struct {
-	// mutex       sync.Mutex
 	Preferences types.Preferences
 }
 
@@ -32,6 +31,18 @@ func getConfigPath() (path string, err error) {
 	path = filepath.Join(value, "secret-editor")
 
 	return path, nil
+}
+
+func getDefaultConfig() *types.Preferences {
+	return &types.Preferences{
+		General: types.PreferencesGeneral{
+			LastOpenedSecret: "",
+		},
+		Provider: types.PreferencesProvider{
+			Current:    "AWS",
+			AWSProfile: "default",
+		},
+	}
 }
 
 func getConfigFilePath() (filePath string, err error) {
@@ -71,12 +82,12 @@ func (p *PreferencesStorage) LoadPreferences() error {
 
 		// Create app's config directory
 		err = os.Mkdir(path, 0700)
-		if err != nil {
+		if err != nil && !errors.Is(err, os.ErrExist) {
 			return err
 		}
 
 		// Create file
-		err := writeFile(fullPath, &p.Preferences)
+		err := writeFile(fullPath, getDefaultConfig())
 		if err != nil {
 			return err
 		}

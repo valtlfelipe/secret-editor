@@ -12,12 +12,18 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/menu/keys"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/wailsapp/wails/v2/pkg/options/linux"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
-	// "github.com/wailsapp/wails/v2/pkg/options/mac"
 )
 
 //go:embed all:frontend/dist
 var assets embed.FS
+
+//go:embed build/appicon.png
+var icon []byte
+
+var version = "0.0.1"
 
 func main() {
 
@@ -68,12 +74,18 @@ func main() {
 		Bind: []interface{}{
 			app,
 		},
-		// Mac: &mac.Options{
-		// 	About: &mac.AboutInfo{
-		// 		Title:   "My Application",
-		// 		Message: "© 2021 Me",
-		// 	},
-		// },
+		Mac: &mac.Options{
+			About: &mac.AboutInfo{
+				Title:   "Secret Editor " + version,
+				Message: "A modern lightweight cross-platform AWS Secrets Manager editor.\n\nCopyright © 2024",
+				Icon:    icon,
+			},
+			DisableZoom: true,
+		},
+		Linux: &linux.Options{
+			ProgramName: "Secret Editor",
+			Icon:        icon,
+		},
 	})
 
 	if err != nil {
