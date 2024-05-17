@@ -43,23 +43,33 @@ jobs:
       # Building step
       - name: Build macOS App
         if: runner.os == 'macOS'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_darwin-universal.app
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor.app
         shell: bash
 
-      - name: Build .app zip file
+      - name: Build macOS zip file
         if: runner.os == 'macOS'
         shell: bash
-        run: ditto -c -k ./build/bin/SecretEditor_darwin-universal.app ./build/bin/SecretEditor_darwin-universal.app.zip
+        run: ditto -c -k ./build/bin/SecretEditor.app ./build/bin/SecretEditor_macOS_universal.zip
 
       - name: Build Linux App
         if: runner.os == 'Linux'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_linux-amd64
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor
         shell: bash
+
+      - name: Build linux zip file
+        if: runner.os == 'Linux'
+        shell: bash
+        run: ditto -c -k ./build/bin/SecretEditor ./build/bin/SecretEditor_linux_amd64.zip
 
       - name: Build Windows App
         if: runner.os == 'Windows'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_windows-amd64.exe
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor.exe
         shell: bash
+
+      - name: Build Windows zip file
+        if: runner.os == 'Windows'
+        shell: bash
+        run: ditto -c -k ./build/bin/SecretEditor.exe ./build/bin/SecretEditor_windows_amd64.zip
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -67,4 +77,4 @@ jobs:
         with:
           fail_on_unmatched_files: true
           files: |
-            */bin/*
+            */bin/*.zip
