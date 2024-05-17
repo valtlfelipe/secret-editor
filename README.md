@@ -8,7 +8,6 @@
 
 [![License](https://img.shields.io/github/license/valtlfelipe/secret-editor)](https://github.com/valtlfelipe/secret-editor/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/valtlfelipe/secret-editor)](https://github.com/valtlfelipe/secret-editor/releases)
-![GitHub All Releases](https://img.shields.io/github/downloads/valtlfelipe/secret-editor/total)
 
 <strong>Secret Editor is a modern lightweight cross-platform AWS Secrets Manager editor desktop app available for Mac, Windows, and Linux.</strong>
 
