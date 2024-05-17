@@ -43,22 +43,22 @@ jobs:
       # Building step
       - name: Build macOS App
         if: runner.os == 'macOS'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_${{matrix.build.platform}}.app
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_darwin-universal.app
         shell: bash
 
       - name: Build .app zip file
         if: runner.os == 'macOS'
         shell: bash
-        run: ditto -c -k ./build/bin/SecretEditor_${{matrix.build.platform}}.app ./build/bin/SecretEditor_${{matrix.build.platform}}.app.zip
+        run: ditto -c -k ./build/bin/SecretEditor_darwin-universal.app ./build/bin/SecretEditor_darwin-universal.app.zip
 
       - name: Build Linux App
         if: runner.os == 'Linux'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_${{matrix.build.platform}}
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_linux-amd64
         shell: bash
 
       - name: Build Windows App
         if: runner.os == 'Windows'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_${{matrix.build.platform}}.exe
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_windows-amd64.exe
         shell: bash
 
       - name: Release
