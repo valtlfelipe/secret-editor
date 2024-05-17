@@ -43,32 +43,28 @@ jobs:
       # Building step
       - name: Build macOS App
         if: runner.os == 'macOS'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor.app
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_${{matrix.build.platform}}.app
         shell: bash
+
+      - name: Build .app zip file
+        if: runner.os == 'macOS'
+        shell: bash
+        run: ditto -c -k ./build/bin/SecretEditor_${{matrix.build.platform}}.app ./build/bin/SecretEditor_${{matrix.build.platform}}.app.zip
 
       - name: Build Linux App
         if: runner.os == 'Linux'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_${{matrix.build.platform}}
         shell: bash
 
       - name: Build Windows App
         if: runner.os == 'Windows'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor.exe
-        shell: bash
-
-      - name: Add macOS perms
-        if: runner.os == 'macOS'
-        run: chmod +x build/bin/*/Contents/MacOS/*
-        shell: bash
-
-      - name: Add Linux perms
-        if: runner.os  == 'Linux'
-        run: chmod +x build/bin/*
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor_${{matrix.build.platform}}.exe
         shell: bash
 
       - name: Release
+        working-directory: ./build
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            ./build/bin/*
+            */bin/*
