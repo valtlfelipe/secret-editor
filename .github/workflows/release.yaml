@@ -37,19 +37,19 @@ jobs:
 
       - name: Install Linux Wails deps
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu
+        run: sudo apt-get update && sudo apt-get install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu zip
         shell: bash
 
       # Building step
       - name: Build macOS App
         if: runner.os == 'macOS'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor.app
+        run: wails build --platform ${{matrix.build.platform}}
         shell: bash
 
       - name: Build macOS zip file
         if: runner.os == 'macOS'
         shell: bash
-        run: ditto -c -k ./build/bin/SecretEditor.app ./build/bin/SecretEditor_macOS_universal.zip
+        run: ditto -c -k --keepParent ./build/bin/Secret\ Editor.app ./build/bin/SecretEditor_macOS_universal.zip
 
       - name: Build Linux App
         if: runner.os == 'Linux'
@@ -59,7 +59,7 @@ jobs:
       - name: Build linux zip file
         if: runner.os == 'Linux'
         shell: bash
-        run: ditto -c -k ./build/bin/SecretEditor ./build/bin/SecretEditor_linux_amd64.zip
+        run: zip ./build/bin/SecretEditor_linux_amd64.zip ./build/bin/SecretEditor
 
       - name: Build Windows App
         if: runner.os == 'Windows'
@@ -68,8 +68,8 @@ jobs:
 
       - name: Build Windows zip file
         if: runner.os == 'Windows'
-        shell: bash
-        run: ditto -c -k ./build/bin/SecretEditor.exe ./build/bin/SecretEditor_windows_amd64.zip
+        working-directory: ./build/bin
+        run: Compress-Archive "SecretEditor.exe" "SecretEditor_windows_amd64.zip"
 
       - name: Release
         uses: softprops/action-gh-release@v2
