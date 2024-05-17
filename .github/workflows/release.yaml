@@ -17,14 +17,14 @@ jobs:
       matrix:
         build:
           [
-            { name: secretManager, platform: linux/amd64, os: ubuntu-latest },
+            { name: 'SecretEditor', platform: linux/amd64, os: ubuntu-latest },
             {
-              name: secretManager,
+              name: 'SecretEditor',
               platform: windows/amd64,
               os: windows-latest,
             },
             {
-              name: secretManager,
+              name: 'SecretEditor',
               platform: darwin/universal,
               os: macos-latest,
             },
