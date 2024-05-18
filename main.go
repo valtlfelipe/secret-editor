@@ -64,6 +64,18 @@ func main() {
 		appMenu.Append(menu.WindowMenu())
 	}
 
+	HelpMenu := appMenu.AddSubmenu("Help")
+	HelpMenu.AddText("Changelogs", nil, func(_ *menu.CallbackData) {
+		runtime.BrowserOpenURL(app.ctx, "https://github.com/valtlfelipe/secret-editor/releases")
+	})
+	HelpMenu.AddText("Report bug & feedback", nil, func(_ *menu.CallbackData) {
+		runtime.BrowserOpenURL(app.ctx, "https://github.com/valtlfelipe/secret-editor/issues/new/choose")
+	})
+	HelpMenu.AddSeparator()
+	HelpMenu.AddText("About this app", nil, func(_ *menu.CallbackData) {
+		runtime.BrowserOpenURL(app.ctx, "https://github.com/valtlfelipe/secret-editor#readme")
+	})
+
 	// Create application with options
 	err = wails.Run(&options.App{
 		Title:  "Secret Editor",
