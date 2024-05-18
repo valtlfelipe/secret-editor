@@ -6,6 +6,10 @@ export function CreateSecret(arg1, arg2) {
   return window['go']['main']['App']['CreateSecret'](arg1, arg2);
 }
 
+export function ExportSecret(arg1, arg2) {
+  return window['go']['main']['App']['ExportSecret'](arg1, arg2);
+}
+
 export function GetPreferences() {
   return window['go']['main']['App']['GetPreferences']();
 }

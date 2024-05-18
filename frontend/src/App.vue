@@ -4,8 +4,9 @@ import {
   LoadSecret,
   GetPreferences,
   SetPreference,
+  ExportSecret,
 } from '@wailsjs/go/main/App';
-import { EventsOn, WindowSetTitle } from '@wailsjs/runtime';
+import { EventsEmit, EventsOn, WindowSetTitle } from '@wailsjs/runtime';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'vue-sonner';
 
@@ -66,6 +67,21 @@ EventsOn('command:open', async () => {
   }
   openSecretSelector.value = true;
 });
+
+EventsOn('command:export', () => {
+  exportSecret();
+});
+
+async function exportSecret() {
+  if (!loadedSecret.value.name) return;
+  const result = await ExportSecret(loadedSecret.value.name, code.value);
+  if (!result.success) {
+    toast.error(result.error);
+    return;
+  }
+
+  toast.success('Exported successfully.');
+}
 
 function confirmAction(action: string) {
   confirmIntendedAction = action;

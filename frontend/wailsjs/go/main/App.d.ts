@@ -4,6 +4,8 @@ import {types} from '../models';
 
 export function CreateSecret(arg1:any,arg2:any):Promise<types.Result>;
 
+export function ExportSecret(arg1:any,arg2:any):Promise<types.Result>;
+
 export function GetPreferences():Promise<types.Preferences>;
 
 export function GetSecrets():Promise<types.ResultList>;

@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"os"
 
 	"github.com/valtlfelipe/secret-editor/backend/services"
 	"github.com/valtlfelipe/secret-editor/backend/services/secrets"
 	"github.com/valtlfelipe/secret-editor/backend/types"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 // App struct
@@ -51,4 +53,35 @@ func (a *App) LoadSecret(arn *string) types.Result {
 
 func (a *App) SaveSecret(arn *string, secret *string) types.Result {
 	return a.SecretsHandler.Provider.SaveSecret(arn, secret)
+}
+
+func (a *App) ExportSecret(name *string, secret *string) (resp types.Result) {
+	filepath, err := runtime.SaveFileDialog(a.ctx, runtime.SaveDialogOptions{
+		Title:           "Export Secret",
+		ShowHiddenFiles: false,
+		DefaultFilename: *name + ".json",
+		Filters: []runtime.FileFilter{
+			{Pattern: "*.json"},
+		},
+	})
+	if err != nil {
+		resp.Error = err.Error()
+		return
+	}
+
+	file, err := os.Create(filepath)
+	if err != nil {
+		resp.Error = err.Error()
+		return
+	}
+	defer file.Close()
+
+	_, err = file.WriteString(*secret)
+	if err != nil {
+		resp.Error = err.Error()
+		return
+	}
+
+	resp.Success = true
+	return
 }

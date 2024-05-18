@@ -54,6 +54,10 @@ func main() {
 	FileMenu.AddText("Save", keys.CmdOrCtrl("s"), func(_ *menu.CallbackData) {
 		runtime.EventsEmit(app.ctx, "command:save")
 	})
+	FileMenu.AddSeparator()
+	FileMenu.AddText("Export", keys.CmdOrCtrl("e"), func(_ *menu.CallbackData) {
+		runtime.EventsEmit(app.ctx, "command:export")
+	})
 
 	if r.GOOS == "darwin" {
 		appMenu.Append(menu.EditMenu())
