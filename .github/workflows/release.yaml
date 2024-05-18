@@ -1,10 +1,8 @@
 name: Wails build
 
 on:
-  push:
-    tags:
-      # Match any new tag
-      - '*'
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -35,15 +33,30 @@ jobs:
       - name: Get Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
-      - name: Install Linux Wails deps
+      - name: Install Linux deps
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install libgtk-3-0 libwebkit2gtk-4.0-dev gcc-aarch64-linux-gnu zip
         shell: bash
 
+      - name: Install Windows deps
+        if: runner.os == 'Windows'
+        uses: crazy-max/ghaction-chocolatey@v2
+        with:
+          args: install jq
+
+      - name: Set version
+        shell: bash
+        run: |
+          jq '.info.productVersion = "${{ github.event.release.tag_name }}"' wails.json > tmp.json
+          mv tmp.json wails.json
+          cd frontend
+          jq '.version = "${{ github.event.release.tag_name }}"' package.json > tmp.json
+          mv tmp.json package.json
+
       # Building step
       - name: Build macOS App
         if: runner.os == 'macOS'
-        run: wails build --platform ${{matrix.build.platform}}
+        run: wails build --platform ${{matrix.build.platform}} -ldflags "-X main.version=${{ github.event.release.tag_name }}"
         shell: bash
 
       - name: Build macOS zip file
@@ -53,7 +66,7 @@ jobs:
 
       - name: Build Linux App
         if: runner.os == 'Linux'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor -ldflags "-X main.version=${{ github.event.release.tag_name }}"
         shell: bash
 
       - name: Build linux zip file
@@ -64,7 +77,7 @@ jobs:
 
       - name: Build Windows App
         if: runner.os == 'Windows'
-        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor.exe
+        run: wails build --platform ${{matrix.build.platform}} -o SecretEditor.exe -ldflags "-X main.version=${{ github.event.release.tag_name }}"
         shell: bash
 
       - name: Build Windows zip file

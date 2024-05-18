@@ -19,4 +19,7 @@ export default defineConfig({
       '@wailsjs': path.resolve(__dirname, './wailsjs'),
     },
   },
+  define: {
+    APP_VERSION: JSON.stringify(process.env.npm_package_version),
+  },
 });

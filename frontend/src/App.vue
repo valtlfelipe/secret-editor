@@ -24,6 +24,7 @@ import { WithoutSavingConfirm } from '@/components/app/without-saving-confirm';
 import { Loading } from '@/components/ui/loading';
 import { Button } from '@/components/ui/button';
 
+const appVersion = APP_VERSION || '0';
 const isInitializing = ref(true);
 const isValid = ref(true);
 const isDirty = ref(false);
@@ -302,7 +303,7 @@ init();
             href="#/"
             @click.prevent="clickFooter"
             class="text-muted-foreground text-xs"
-            >Secret Editor v.beta</a
+            >Secret Editor v{{ appVersion }}</a
           >
         </div>
       </footer>
