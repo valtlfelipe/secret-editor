@@ -85,8 +85,9 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		BackgroundColour: &options.RGBA{R: 249, G: 250, B: 251, A: 1},
-		OnStartup:        app.startup,
+		BackgroundColour:         &options.RGBA{R: 249, G: 250, B: 251, A: 1},
+		EnableDefaultContextMenu: true,
+		OnStartup:                app.startup,
 		Bind: []interface{}{
 			app,
 		},

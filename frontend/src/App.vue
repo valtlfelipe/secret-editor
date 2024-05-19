@@ -6,7 +6,7 @@ import {
   SetPreference,
   ExportSecret,
 } from '@wailsjs/go/main/App';
-import { EventsEmit, EventsOn, WindowSetTitle } from '@wailsjs/runtime';
+import { EventsOn, WindowSetTitle } from '@wailsjs/runtime';
 import { Toaster } from '@/components/ui/sonner';
 import { toast } from 'vue-sonner';
 
